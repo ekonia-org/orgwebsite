@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ekonia: Közvetlen kapcsolat a település és a lakosai között</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#F7F6F2',
+          ink: '#1B4D3A',
+          accent: '#C2410C',
+          accent2: '#2FAE68',
+        },
+        fontFamily: {
+          display: ['Space Grotesk', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['IBM Plex Mono', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background-color: #F7F6F2; }
+  .focus-ring:focus-visible { outline: 2px solid #C2410C; outline-offset: 2px; }
+  .nav-link { position: relative; }
+  .nav-link::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 1px; background: #2FAE68; transition: width 0.25s ease; }
+  .nav-link:hover::after { width: 100%; }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body class="font-body text-ink antialiased overflow-x-hidden">
+
+<header class="sticky top-0 z-50 bg-paper/90 backdrop-blur border-b border-ink/10">
+  <div class="max-w-[1320px] mx-auto flex items-center justify-between px-6 lg:px-10 h-20">
+    <a href="#" class="font-display text-xl font-semibold tracking-tight focus-ring">EKONIA</a>
+    <nav class="hidden md:flex items-center gap-10 text-sm font-medium">
+      <a href="#miert-mi" class="nav-link focus-ring">Miért mi?</a>
+      <a href="#funkciok" class="nav-link focus-ring">Funkciók</a>
+      <a href="#kapcsolat" class="bg-ink text-paper px-5 py-2.5 hover:bg-accent transition-colors focus-ring">Kapcsolat</a>
+    </nav>
+    <button id="mobile-nav-toggle" class="md:hidden focus-ring" aria-label="Menü megnyitása">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="mobile-nav" class="hidden md:hidden px-6 pb-6 flex flex-col gap-4 text-sm font-medium">
+    <a href="#miert-mi" class="focus-ring">Miért mi?</a>
+    <a href="#funkciok" class="focus-ring">Funkciók</a>
+    <a href="#kapcsolat" class="bg-ink text-paper px-5 py-2.5 text-center focus-ring">Kapcsolat</a>
+  </div>
+</header>
+
+<section class="max-w-[1320px] mx-auto px-6 lg:px-10 pt-16 pb-20 lg:pt-24 lg:pb-28">
+  <p class="font-mono text-[11px] uppercase tracking-widest text-ink/50 mb-6">Önkormányzati kommunikációs platform</p>
+
+  <div class="reveal grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-10">
+    <h1 class="lg:col-span-8 font-display font-semibold leading-[1] tracking-tight text-[clamp(2.5rem,6vw,5rem)]">
+      Amit fontos elmondani, azt nem bízzuk egy Facebook-algoritmusra.
+    </h1>
+
+    <div class="lg:col-span-4 lg:pt-3 flex flex-col gap-8">
+      <p class="text-ink/70 leading-relaxed">
+        Ismerős: kiposztol valamit a hivatal, és három ember látja. Az Ekonia egy saját alkalmazást ad a településnek. A hír push értesítésként landol a lakosok telefonján, nem egy hírfolyamban elveszve.
+      </p>
+      <div class="flex flex-col gap-4 items-start">
+        <a href="#kapcsolat" class="bg-ink text-paper px-7 py-3.5 font-medium hover:bg-accent transition-colors focus-ring">Kérem a demót</a>
+        <a href="#funkciok" class="text-sm font-mono uppercase tracking-widest border-b border-ink/30 hover:border-accent2 hover:text-accent2 transition-colors focus-ring pb-0.5">Hogyan működik →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal mt-16 border border-ink/15 bg-ink/[0.02] p-6 md:p-8 max-w-4xl">
+    <div class="flex items-center justify-between gap-4 mb-2">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-accent">Így működik élesben</p>
+      <button id="sim-reset" class="font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-accent2 transition-colors focus-ring underline decoration-ink/20 underline-offset-4">Próbáld ki újra</button>
+    </div>
+    <p id="sim-instruction" class="font-mono text-[11px] text-ink/50 mb-8 leading-relaxed">Fogja meg a hírkártyát, és húzza (vagy egyszerűen koppintson rá) a Közzététel mezőbe.</p>
+
+    <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-6">
+
+      <div class="w-full md:w-[200px] shrink-0 flex flex-col gap-3">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Új hír</p>
+        <div class="h-[100px] border border-dashed border-ink/20 flex items-center justify-center px-3 relative">
+          <div id="sim-card" tabindex="0" role="button" aria-label="Hírkártya. Koppintson, vagy húzza a Közzététel mezőbe." class="focus-ring cursor-grab active:cursor-grabbing select-none touch-none w-full bg-paper border border-ink/20 p-3 font-mono text-[10px] leading-snug">
+            <p class="text-ink/50 mb-1.5 uppercase tracking-widest flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-accent2 inline-block shrink-0"></span>Közlemény</p>
+            <p class="text-ink">Csütörtökön szünetel a vízszolgáltatás a Kossuth utcában.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex md:hidden items-center justify-center text-ink/25 h-4">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 0v16M2 11l5 5 5-5" stroke="currentColor" stroke-width="1.3"/></svg>
+      </div>
+      <div class="hidden md:flex items-center text-ink/25 shrink-0">
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h16M11 2l5 5-5 5" stroke="currentColor" stroke-width="1.3"/></svg>
+      </div>
+
+      <div class="flex-1 min-w-0">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Hivatali admin felület</p>
+        <div class="border border-ink/15 bg-paper p-5">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-4">admin.ekonia.hu</p>
+          <div id="sim-dropzone" class="border border-dashed border-ink/20 h-[72px] flex items-center justify-center mb-4 transition-colors duration-200">
+            <span id="sim-dropzone-label" class="font-mono text-[10px] uppercase tracking-widest text-ink/30 text-center px-2">Ide húzza a hírkártyát</span>
+          </div>
+          <span id="sim-publish-btn" class="inline-block bg-ink text-paper text-[11px] font-mono uppercase tracking-widest px-4 py-2.5 opacity-40 transition-all duration-200">Közzététel</span>
+        </div>
+      </div>
+
+      <div class="flex md:hidden items-center justify-center text-ink/25 h-4">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 0v16M2 11l5 5 5-5" stroke="currentColor" stroke-width="1.3"/></svg>
+      </div>
+      <div class="hidden md:flex items-center text-ink/25 shrink-0">
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h16M11 2l5 5-5 5" stroke="currentColor" stroke-width="1.3"/></svg>
+      </div>
+
+      <div class="w-full md:w-[200px] shrink-0">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">A lakos telefonján</p>
+        <div class="border border-ink/15 bg-paper p-4 h-[136px] relative overflow-hidden">
+          <p id="sim-phone-idle" class="font-mono text-[10px] text-ink/30 flex items-center justify-center h-full text-center px-2">Még nincs új értesítés</p>
+          <div id="sim-phone-notification" class="hidden font-mono text-[10px] leading-relaxed">
+            <p class="flex items-center gap-1.5 text-ink/50 mb-2"><span class="w-1.5 h-1.5 bg-accent2 inline-block shrink-0"></span>Most · ÚJ KÖZLEMÉNY</p>
+            <p class="text-ink">Csütörtökön szünetel a vízszolgáltatás a Kossuth utcában.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <p id="sim-success" class="hidden mt-6 font-mono text-[11px] text-accent2" aria-live="polite">Sikeresen közzétéve. A lakosok telefonján azonnal megjelent.</p>
+  </div>
+</section>
+
+<section id="miert-mi" class="border-t border-ink/10">
+  <div class="reveal max-w-[1320px] mx-auto px-6 lg:px-10 pt-16 pb-10">
+    <p class="font-mono text-xs uppercase tracking-widest text-accent mb-4">A jelenlegi helyzet</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight max-w-2xl">Ezt biztos ismeri</h2>
+    <p class="mt-4 text-ink/60 max-w-md">Nem Önökön múlik. Csak épp a jelenlegi eszközök tíz évvel le vannak maradva.</p>
+  </div>
+
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 border-t border-ink/10">
+    <div class="group grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 py-9 border-b border-ink/10 hover:bg-ink/[0.02] transition-colors duration-300">
+      <h3 class="md:col-span-4 font-display text-xl font-semibold group-hover:text-accent transition-colors duration-300">Kiposztolja, és senki se látja</h3>
+      <p class="md:col-span-8 text-ink/70 leading-relaxed">Anno elég volt kiírni egy hírt a Facebook oldalra, és mindenki tudott róla. Ma az elérés a töredékére esett, hiába a hirdetőtábla, hiába a szórólap, a lakosok jó része nem is találkozik a hírrel.</p>
+    </div>
+    <div class="group grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 py-9 border-b border-ink/10 hover:bg-ink/[0.02] transition-colors duration-300">
+      <h3 class="md:col-span-4 font-display text-xl font-semibold group-hover:text-accent transition-colors duration-300">Ugyanaz a kérdés, tizedszer aznap</h3>
+      <p class="md:col-span-8 text-ink/70 leading-relaxed">„Mikor jön vissza a víz?", „Hol veszem át a papírt?", ismerős kérdések, amikre naponta többször válaszolnak telefonon és a pultnál, ahelyett hogy dolgozhatnának.</p>
+    </div>
+    <div class="group grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 py-9 border-b border-ink/10 hover:bg-ink/[0.02] transition-colors duration-300">
+      <h3 class="md:col-span-4 font-display text-xl font-semibold group-hover:text-accent transition-colors duration-300">A bejelentés valahol elvész</h3>
+      <p class="md:col-span-8 text-ink/70 leading-relaxed">Valaki felhívja a hivatalt egy kátyú miatt, vagy ír egy e-mailt, de hogy pontosan hol a probléma? Az összejön telefonon, aztán a papír elkeveredik, és senki se tudja, kimentek-e már.</p>
+    </div>
+    <div class="group grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 py-9 hover:bg-ink/[0.02] transition-colors duration-300">
+      <h3 class="md:col-span-4 font-display text-xl font-semibold group-hover:text-accent transition-colors duration-300">A helyi újság drága, és egyre kevesebben olvassák</h3>
+      <p class="md:col-span-8 text-ink/70 leading-relaxed">Minden hónapban fizetnek a nyomtatásért és a kihordásért, mire a hír megjelenik, már két hete aktuális. A fiatalabbak meg amúgy is a telefonjukról tájékozódnak, ha egyáltalán.</p>
+    </div>
+  </div>
+</section>
+
+<section id="funkciok" class="bg-ink text-paper mt-20 border-t-2 border-accent">
+  <div class="reveal max-w-[1320px] mx-auto px-6 lg:px-10 pt-16 pb-12">
+    <p class="font-mono text-xs uppercase tracking-widest text-[#F2914B] mb-4">A megoldás</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight max-w-2xl">Egy app a lakosoknak. Egy egyszerű felület a hivatalnak.</h2>
+    <p class="mt-4 text-paper/60 max-w-md">A kettő ugyanabból a rendszerből él, csak más oldalról nézve. A lakos egy letisztult appot lát, Önök egy admin felületet, amit tényleg öt perc alatt megtanulnak.</p>
+  </div>
+
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 pb-20 grid sm:grid-cols-2 gap-x-12 gap-y-14">
+    <div>
+      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
+      <h3 class="font-display text-xl font-semibold">Azonnali push értesítés</h3>
+      <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">ezt a lakosok kapják</p>
+      <p class="text-paper/70 leading-relaxed">Egy kattintás, és a közlemény azonnal megjelenik a lakosok telefonján. Nincs algoritmus, ami eldönti, ki lássa. Sürgős esetben (pl. vízkimaradás) hangjelzéssel járó riasztás is küldhető.</p>
+    </div>
+    <div>
+      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
+      <h3 class="font-display text-xl font-semibold">Hibabejelentés fotóval és GPS-szel</h3>
+      <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">ezt is a lakosok használják</p>
+      <p class="text-paper/70 leading-relaxed">A lakos lefotózza a kátyút, az app pedig automatikusan hozzácsapja a helyet. A bejelentés azonnal ott van az admin felületen, térképre rakva. Nem kell találgatni, hova is kellene kimenni.</p>
+    </div>
+    <div>
+      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
+      <h3 class="font-display text-xl font-semibold">Hírek és események egy helyen</h3>
+      <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">mindkét oldal használja</p>
+      <p class="text-paper/70 leading-relaxed">Falunap, testületi ülés, nyitvatartás-változás, pályázati felhívás: egy rendezett, kereshető felület, amit a lakosok maguktól átböngésznek, ahelyett hogy felhívnák a hivatalt.</p>
+    </div>
+    <div>
+      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
+      <h3 class="font-display text-xl font-semibold">Admin felület, informatikus nélkül</h3>
+      <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">ez a hivatal oldala</p>
+      <p class="text-paper/70 leading-relaxed">Ha valaki tud e-mailt írni, ezt is tudja kezelni. A közlemény megírása vagy egy bejelentés lezárása pár kattintás, böngészőből, bármilyen eszközről.</p>
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-ink/10">
+  <div class="reveal max-w-[1320px] mx-auto px-6 lg:px-10 pt-16 pb-4">
+    <p class="font-mono text-xs uppercase tracking-widest text-accent mb-4">Rólunk</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Miért csináljuk ezt</h2>
+    <p class="mt-8 font-display text-2xl sm:text-3xl leading-snug max-w-3xl">
+      Onnan indult az egész, hogy megnéztünk pár önkormányzati Facebook-oldalt: 200-300 követő, egy fontos közlemény alatt alig pár lájk. Gondoltuk, ennek nem így kéne mennie. Egy település és a lakosai közti kapcsolat nem múlhat azon, épp mennyi elérést enged egy platform, amit nem is a mi igényeinkre találtak ki.
+    </p>
+  </div>
+
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 py-16 grid sm:grid-cols-2 gap-12 sm:gap-16">
+    <div class="flex flex-col sm:flex-row gap-6">
+      <div class="w-full sm:w-32 h-40 sm:h-32 border border-ink/15 bg-ink/[0.03] flex items-center justify-center shrink-0">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">Fotó</span>
+      </div>
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-ink/40">Alapító</p>
+        <p class="font-display text-lg font-semibold mt-1">[Név megadása]</p>
+        <p class="text-sm text-ink/60 mt-2 leading-relaxed">„[Rövid, személyes bemutatkozás: honnan jött az ötlet, mi motivál a projektben.]"</p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-6">
+      <div class="w-full sm:w-32 h-40 sm:h-32 border border-ink/15 bg-ink/[0.03] flex items-center justify-center shrink-0">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">Fotó</span>
+      </div>
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-ink/40">Termékfejlesztés</p>
+        <p class="font-display text-lg font-semibold mt-1">[Név megadása]</p>
+        <p class="text-sm text-ink/60 mt-2 leading-relaxed">„[Rövid, személyes bemutatkozás: szakmai háttér, mit tart fontosnak az önkormányzatokkal való munkában.]"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-ink/10">
+  <div class="reveal max-w-[1320px] mx-auto px-6 lg:px-10 pt-16 pb-16">
+    <p class="font-mono text-xs uppercase tracking-widest text-accent mb-4">Menetrend</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight max-w-2xl">Így néz ki az egész, elejétől a végéig</h2>
+  </div>
+
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 pb-20">
+    <div class="relative hidden md:block h-px bg-ink/15 mb-10"></div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+      <div class="relative">
+        <span class="hidden md:block absolute -top-[46px] left-0 w-2 h-2 bg-accent2"></span>
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-3">Elsőként</p>
+        <h3 class="font-display font-semibold text-lg mb-2">Beszélgetünk</h3>
+        <p class="text-sm text-ink/60 leading-relaxed">Leülünk (vagy videóhívunk), és elmondja, mi megy most, mi nem. Nem kötelezettség, csak egy őszinte beszélgetés.</p>
+      </div>
+      <div class="relative">
+        <span class="hidden md:block absolute -top-[46px] left-0 w-2 h-2 bg-accent2"></span>
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-3">Utána</p>
+        <h3 class="font-display font-semibold text-lg mb-2">Beállítjuk</h3>
+        <p class="text-sm text-ink/60 leading-relaxed">A rendszer felveszi a település arculatát, elnevezését, a saját ügytípusait, hogy az app elsőre is otthonosnak tűnjön.</p>
+      </div>
+      <div class="relative">
+        <span class="hidden md:block absolute -top-[46px] left-0 w-2 h-2 bg-accent2"></span>
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-3">Aztán</p>
+        <h3 class="font-display font-semibold text-lg mb-2">Megtanítjuk</h3>
+        <p class="text-sm text-ink/60 leading-relaxed">Egy rövid, gyakorlatias alkalom a munkatársaknak. Nem kell hozzá informatikus, tényleg.</p>
+      </div>
+      <div class="relative">
+        <span class="hidden md:block absolute -top-[46px] left-0 w-2 h-2 bg-accent2"></span>
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-3">Végül</p>
+        <h3 class="font-display font-semibold text-lg mb-2">Elindul</h3>
+        <p class="text-sm text-ink/60 leading-relaxed mb-3">A lakosok letöltik az appot.</p>
+        <span class="inline-block border border-accent text-accent text-[11px] font-mono uppercase tracking-widest px-3 py-1.5">3 hónapig ingyen</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-ink/10">
+  <div class="reveal max-w-[1320px] mx-auto px-6 lg:px-10 pt-16 pb-10">
+    <p class="font-mono text-xs uppercase tracking-widest text-accent mb-4">GYIK</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight max-w-2xl">Amit önkormányzati vezetők leggyakrabban kérdeznek</h2>
+  </div>
+
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 pb-20 divide-y divide-ink/10 border-t border-ink/10">
+    <details class="group" open>
+      <summary class="flex items-center justify-between gap-6 py-6 cursor-pointer list-none focus-ring">
+        <span class="font-display font-semibold text-lg">Kell hozzá informatikus vagy külön eszköz a hivatalban?</span>
+        <span class="shrink-0 text-accent text-xl group-open:rotate-45 transition-transform">+</span>
+      </summary>
+      <p class="pb-6 text-sm text-ink/60 leading-relaxed max-w-2xl">Nem. Böngészőből megy, bármilyen gépről vagy telefonról. Ha valaki tud e-mailt írni, ezt is fogja tudni. A betanítást is adjuk mellé.</p>
+    </details>
+    <details class="group">
+      <summary class="flex items-center justify-between gap-6 py-6 cursor-pointer list-none focus-ring">
+        <span class="font-display font-semibold text-lg">Mi a helyzet a GDPR-ral?</span>
+        <span class="shrink-0 text-accent text-xl group-open:rotate-45 transition-transform">+</span>
+      </summary>
+      <p class="pb-6 text-sm text-ink/60 leading-relaxed max-w-2xl">Rendben van. A lakosok adatait csak a szükséges mértékben kezeljük, EU-s szervereken tároljuk, és minden önkormányzattal kötünk adatkezelési tájékoztatót, ha kell, adatfeldolgozói szerződést is.</p>
+    </details>
+    <details class="group">
+      <summary class="flex items-center justify-between gap-6 py-6 cursor-pointer list-none focus-ring">
+        <span class="font-display font-semibold text-lg">Mennyi idő, mire elindul?</span>
+        <span class="shrink-0 text-accent text-xl group-open:rotate-45 transition-transform">+</span>
+      </summary>
+      <p class="pb-6 text-sm text-ink/60 leading-relaxed max-w-2xl">Pár hét, a település méretétől és attól függően, mennyi testreszabást kérnek. A pontos menetet a Menetrend részben írtuk le.</p>
+    </details>
+    <details class="group">
+      <summary class="flex items-center justify-between gap-6 py-6 cursor-pointer list-none focus-ring">
+        <span class="font-display font-semibold text-lg">Mennyibe kerül, és mennyire kell elköteleznem magam?</span>
+        <span class="shrink-0 text-accent text-xl group-open:rotate-45 transition-transform">+</span>
+      </summary>
+      <p class="pb-6 text-sm text-ink/60 leading-relaxed max-w-2xl">Ez a lakosságszámtól és a kért funkcióktól függ, ezt a konzultáción beszéljük át, testre szabva. Az első 3 hónap mindenképp ingyenes, elköteleződés nélkül.</p>
+    </details>
+    <details class="group">
+      <summary class="flex items-center justify-between gap-6 py-6 cursor-pointer list-none focus-ring">
+        <span class="font-display font-semibold text-lg">Mi van, ha a lakosok nem töltik le?</span>
+        <span class="shrink-0 text-accent text-xl group-open:rotate-45 transition-transform">+</span>
+      </summary>
+      <p class="pb-6 text-sm text-ink/60 leading-relaxed max-w-2xl">Adunk egy kis kampányanyagot a bevezetéshez: plakát, posztminta, szórólap. De valljuk be, egy azonnali riasztás és egy működő hibabejelentés önmagában is elég ok a letöltésre.</p>
+    </details>
+  </div>
+</section>
+
+<section id="kapcsolat" class="border-t border-ink/10">
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+    <div class="reveal lg:col-span-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-accent mb-4">Kapcsolat</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight leading-tight">Írjon pár sort, és jelentkezünk</h2>
+      <p class="mt-5 text-ink/60 leading-relaxed max-w-sm">Nem eladni akarunk, csak beszélgetni róla, mire lenne szükség Önöknél. 1 munkanapon belül jelentkezünk.</p>
+      <div class="mt-10 space-y-1.5 font-mono text-sm text-ink/60">
+        <p>info@ekonia.hu</p>
+        <p>+36 XX XXX XXXX</p>
+      </div>
+    </div>
+
+    <form class="lg:col-span-8 space-y-8">
+      <div>
+        <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="name">Teljes név</label>
+        <input id="name" type="text" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+      </div>
+      <div class="grid sm:grid-cols-2 gap-8">
+        <div>
+          <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="town">Település neve</label>
+          <input id="town" type="text" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+        </div>
+        <div>
+          <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="role">Beosztás</label>
+          <select id="role" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+            <option value="">Válasszon…</option>
+            <option>Polgármester</option>
+            <option>Jegyző</option>
+            <option>Kommunikációs vezető</option>
+            <option>Egyéb</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-8">
+        <div>
+          <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="email">E-mail cím</label>
+          <input id="email" type="email" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+        </div>
+        <div>
+          <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="phone">Telefonszám</label>
+          <input id="phone" type="tel" class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+        </div>
+      </div>
+      <div>
+        <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="message">Üzenet</label>
+        <textarea id="message" rows="3" placeholder="Meséljen röviden a település jelenlegi kommunikációs kihívásairól…" class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink resize-none"></textarea>
+      </div>
+      <div class="flex items-center justify-between pt-2 flex-wrap gap-4">
+        <button type="submit" class="bg-ink text-paper px-8 py-3.5 font-medium hover:bg-accent transition-colors focus-ring">Küldés</button>
+        <p class="font-mono text-[11px] text-ink/40 max-w-[200px] text-right">Se spam, se erőltetés, csak egy hívás, ha érdekli.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="border-t border-ink/10">
+  <div class="max-w-[1320px] mx-auto px-6 lg:px-10 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
+    <div class="col-span-2 md:col-span-1">
+      <p class="font-display text-xl font-semibold">EKONIA</p>
+      <p class="mt-3 text-sm text-ink/50 leading-relaxed max-w-[220px]">Közvetlen kapcsolat a település és a lakosai között.</p>
+    </div>
+    <div>
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-4">Navigáció</p>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#miert-mi" class="hover:text-accent2 focus-ring">Miért mi?</a></li>
+        <li><a href="#funkciok" class="hover:text-accent2 focus-ring">Funkciók</a></li>
+        <li><a href="#kapcsolat" class="hover:text-accent2 focus-ring">Kapcsolat</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-4">Jogi</p>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#" class="hover:text-accent2 focus-ring">Adatvédelmi tájékoztató</a></li>
+        <li><a href="#" class="hover:text-accent2 focus-ring">ÁSZF</a></li>
+        <li><a href="#" class="hover:text-accent2 focus-ring">Impresszum</a></li>
+      </ul>
+    </div>
+    <div class="col-span-2 md:col-span-1">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-4">Elérhetőség</p>
+      <ul class="space-y-2 text-sm">
+        <li>info@ekonia.hu</li>
+        <li>+36 XX XXX XXXX</li>
+        <li>[Cím megadása]</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-ink/10">
+    <div class="max-w-[1320px] mx-auto px-6 lg:px-10 py-5 font-mono text-[11px] text-ink/40">
+      © 2026 Ekonia. Minden jog fenntartva.
+    </div>
+  </div>
+</footer>
+
+<script>
+  const mobileNav = document.getElementById('mobile-nav');
+  document.getElementById('mobile-nav-toggle').addEventListener('click', () => mobileNav.classList.toggle('hidden'));
+  mobileNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => mobileNav.classList.add('hidden')));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-visible'));
+  }
+
+  (function () {
+    const card = document.getElementById('sim-card');
+    if (!card) return;
+
+    const dropzone = document.getElementById('sim-dropzone');
+    const dropzoneLabel = document.getElementById('sim-dropzone-label');
+    const publishBtn = document.getElementById('sim-publish-btn');
+    const phoneIdle = document.getElementById('sim-phone-idle');
+    const phoneNotification = document.getElementById('sim-phone-notification');
+    const successMsg = document.getElementById('sim-success');
+    const resetBtn = document.getElementById('sim-reset');
+    const instruction = document.getElementById('sim-instruction');
+
+    const ACCENT = '#C2410C';
+    const ACCENT2 = '#2FAE68';
+
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startY = 0;
+    let published = false;
+
+    function isOverDropzone(x, y) {
+      const rect = dropzone.getBoundingClientRect();
+      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    }
+
+    function highlightDropzone(active) {
+      dropzone.style.borderColor = active ? ACCENT2 : '';
+      dropzone.style.backgroundColor = active ? 'rgba(47,174,104,0.06)' : '';
+      dropzoneLabel.textContent = active ? 'Engedje el' : 'Ide húzza a hírkártyát';
+    }
+
+    function snapBack() {
+      card.style.transition = 'transform 0.3s ease';
+      card.style.transform = '';
+      setTimeout(() => { card.style.transition = ''; }, 300);
+    }
+
+    function publish() {
+      if (published) return;
+      published = true;
+
+      card.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+      card.style.transform = 'scale(0.85)';
+      card.style.opacity = '0';
+      card.setAttribute('aria-hidden', 'true');
+      card.tabIndex = -1;
+
+      highlightDropzone(false);
+      dropzone.style.borderColor = ACCENT;
+      dropzone.style.borderStyle = 'solid';
+      dropzone.style.backgroundColor = 'rgba(194,65,12,0.06)';
+      dropzoneLabel.textContent = 'Feltöltve';
+
+      publishBtn.style.opacity = '1';
+      publishBtn.style.backgroundColor = ACCENT;
+
+      setTimeout(() => {
+        publishBtn.textContent = 'Közzétéve ✓';
+        successMsg.classList.remove('hidden');
+
+        phoneIdle.classList.add('hidden');
+        phoneNotification.classList.remove('hidden');
+        phoneNotification.style.opacity = '0';
+        phoneNotification.style.transform = 'translateY(-8px)';
+        phoneNotification.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+        requestAnimationFrame(() => {
+          phoneNotification.style.opacity = '1';
+          phoneNotification.style.transform = 'translateY(0)';
+        });
+
+        instruction.textContent = 'Kész! Így landol egy közlemény a lakosok telefonján, néhány másodperc alatt.';
+      }, 350);
+    }
+
+    function reset() {
+      published = false;
+      dragging = false;
+
+      card.style.transition = '';
+      card.style.transform = '';
+      card.style.opacity = '1';
+      card.style.zIndex = '';
+      card.style.boxShadow = '';
+      card.removeAttribute('aria-hidden');
+      card.tabIndex = 0;
+
+      dropzone.style.borderColor = '';
+      dropzone.style.backgroundColor = '';
+      dropzoneLabel.textContent = 'Ide húzza a hírkártyát';
+
+      publishBtn.textContent = 'Közzététel';
+      publishBtn.style.opacity = '';
+      publishBtn.style.backgroundColor = '';
+
+      successMsg.classList.add('hidden');
+      phoneNotification.classList.add('hidden');
+      phoneNotification.style.transition = '';
+      phoneIdle.classList.remove('hidden');
+
+      instruction.textContent = 'Fogja meg a hírkártyát, és húzza (vagy egyszerűen koppintson rá) a Közzététel mezőbe.';
+    }
+
+    card.addEventListener('pointerdown', (e) => {
+      if (published) return;
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      card.setPointerCapture(e.pointerId);
+      card.style.transition = '';
+      card.style.zIndex = '20';
+      card.style.boxShadow = '0 14px 28px -10px rgba(27,77,58,0.35)';
+      card.style.transform = 'scale(1.04)';
+    });
+
+    card.addEventListener('pointermove', (e) => {
+      if (!dragging || published) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      card.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 40}deg) scale(1.04)`;
+      highlightDropzone(isOverDropzone(e.clientX, e.clientY));
+    });
+
+    function endDrag(e) {
+      if (!dragging || published) return;
+      dragging = false;
+      card.style.boxShadow = '';
+      card.style.zIndex = '';
+
+      if (!moved || isOverDropzone(e.clientX, e.clientY)) {
+        publish();
+      } else {
+        snapBack();
+        highlightDropzone(false);
+      }
+    }
+
+    card.addEventListener('pointerup', endDrag);
+    card.addEventListener('pointercancel', () => {
+      if (!dragging) return;
+      dragging = false;
+      card.style.boxShadow = '';
+      card.style.zIndex = '';
+      snapBack();
+      highlightDropzone(false);
+    });
+
+    card.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && !published) {
+        e.preventDefault();
+        publish();
+      }
+    });
+
+    resetBtn.addEventListener('click', reset);
+  })();
+</script>
+</body>
+</html>
