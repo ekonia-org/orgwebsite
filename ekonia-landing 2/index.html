@@ -91,66 +91,6 @@
       </div>
     </div>
   </div>
-
-  <div class="reveal mt-16 border border-ink/15 bg-ink/[0.02] p-6 md:p-8 max-w-4xl">
-    <div class="flex items-center justify-between gap-4 mb-2">
-      <p class="font-mono text-[11px] uppercase tracking-widest text-accent">Így működik élesben</p>
-      <button id="sim-reset" class="font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-accent2 transition-colors focus-ring underline decoration-ink/20 underline-offset-4">Próbáld ki újra</button>
-    </div>
-    <p id="sim-instruction" class="font-mono text-[11px] text-ink/50 mb-8 leading-relaxed">Fogja meg a hírkártyát, és húzza (vagy egyszerűen koppintson rá) a Közzététel mezőbe.</p>
-
-    <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-6">
-
-      <div class="w-full md:w-[200px] shrink-0 flex flex-col gap-3">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Új hír</p>
-        <div class="h-[100px] border border-dashed border-ink/20 flex items-center justify-center px-3 relative">
-          <div id="sim-card" tabindex="0" role="button" aria-label="Hírkártya. Koppintson, vagy húzza a Közzététel mezőbe." class="focus-ring cursor-grab active:cursor-grabbing select-none touch-none w-full bg-paper border border-ink/20 p-3 font-mono text-[10px] leading-snug">
-            <p class="text-ink/50 mb-1.5 uppercase tracking-widest flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-accent2 inline-block shrink-0"></span>Közlemény</p>
-            <p class="text-ink">Csütörtökön szünetel a vízszolgáltatás a Kossuth utcában.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex md:hidden items-center justify-center text-ink/25 h-4">
-        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 0v16M2 11l5 5 5-5" stroke="currentColor" stroke-width="1.3"/></svg>
-      </div>
-      <div class="hidden md:flex items-center text-ink/25 shrink-0">
-        <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h16M11 2l5 5-5 5" stroke="currentColor" stroke-width="1.3"/></svg>
-      </div>
-
-      <div class="flex-1 min-w-0">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Hivatali admin felület</p>
-        <div class="border border-ink/15 bg-paper p-5">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-4">admin.ekonia.hu</p>
-          <div id="sim-dropzone" class="border border-dashed border-ink/20 h-[72px] flex items-center justify-center mb-4 transition-colors duration-200">
-            <span id="sim-dropzone-label" class="font-mono text-[10px] uppercase tracking-widest text-ink/30 text-center px-2">Ide húzza a hírkártyát</span>
-          </div>
-          <span id="sim-publish-btn" class="inline-block bg-ink text-paper text-[11px] font-mono uppercase tracking-widest px-4 py-2.5 opacity-40 transition-all duration-200">Közzététel</span>
-        </div>
-      </div>
-
-      <div class="flex md:hidden items-center justify-center text-ink/25 h-4">
-        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 0v16M2 11l5 5 5-5" stroke="currentColor" stroke-width="1.3"/></svg>
-      </div>
-      <div class="hidden md:flex items-center text-ink/25 shrink-0">
-        <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 7h16M11 2l5 5-5 5" stroke="currentColor" stroke-width="1.3"/></svg>
-      </div>
-
-      <div class="w-full md:w-[200px] shrink-0">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">A lakos telefonján</p>
-        <div class="border border-ink/15 bg-paper p-4 h-[136px] relative overflow-hidden">
-          <p id="sim-phone-idle" class="font-mono text-[10px] text-ink/30 flex items-center justify-center h-full text-center px-2">Még nincs új értesítés</p>
-          <div id="sim-phone-notification" class="hidden font-mono text-[10px] leading-relaxed">
-            <p class="flex items-center gap-1.5 text-ink/50 mb-2"><span class="w-1.5 h-1.5 bg-accent2 inline-block shrink-0"></span>Most · ÚJ KÖZLEMÉNY</p>
-            <p class="text-ink">Csütörtökön szünetel a vízszolgáltatás a Kossuth utcában.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <p id="sim-success" class="hidden mt-6 font-mono text-[11px] text-accent2" aria-live="polite">Sikeresen közzétéve. A lakosok telefonján azonnal megjelent.</p>
-  </div>
 </section>
 
 <section id="miert-mi" class="border-t border-ink/10">
@@ -189,25 +129,21 @@
 
   <div class="max-w-[1320px] mx-auto px-6 lg:px-10 pb-20 grid sm:grid-cols-2 gap-x-12 gap-y-14">
     <div>
-      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
       <h3 class="font-display text-xl font-semibold">Azonnali push értesítés</h3>
       <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">ezt a lakosok kapják</p>
       <p class="text-paper/70 leading-relaxed">Egy kattintás, és a közlemény azonnal megjelenik a lakosok telefonján. Nincs algoritmus, ami eldönti, ki lássa. Sürgős esetben (pl. vízkimaradás) hangjelzéssel járó riasztás is küldhető.</p>
     </div>
     <div>
-      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
       <h3 class="font-display text-xl font-semibold">Hibabejelentés fotóval és GPS-szel</h3>
       <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">ezt is a lakosok használják</p>
       <p class="text-paper/70 leading-relaxed">A lakos lefotózza a kátyút, az app pedig automatikusan hozzácsapja a helyet. A bejelentés azonnal ott van az admin felületen, térképre rakva. Nem kell találgatni, hova is kellene kimenni.</p>
     </div>
     <div>
-      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
       <h3 class="font-display text-xl font-semibold">Hírek és események egy helyen</h3>
       <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">mindkét oldal használja</p>
       <p class="text-paper/70 leading-relaxed">Falunap, testületi ülés, nyitvatartás-változás, pályázati felhívás: egy rendezett, kereshető felület, amit a lakosok maguktól átböngésznek, ahelyett hogy felhívnák a hivatalt.</p>
     </div>
     <div>
-      <span class="w-2.5 h-2.5 bg-accent inline-block mb-4"></span>
       <h3 class="font-display text-xl font-semibold">Admin felület, informatikus nélkül</h3>
       <p class="font-mono text-[10px] uppercase tracking-widest text-paper/40 mt-1.5 mb-3">ez a hivatal oldala</p>
       <p class="text-paper/70 leading-relaxed">Ha valaki tud e-mailt írni, ezt is tudja kezelni. A közlemény megírása vagy egy bejelentés lezárása pár kattintás, böngészőből, bármilyen eszközről.</p>
@@ -443,166 +379,6 @@
   } else {
     revealEls.forEach(el => el.classList.add('is-visible'));
   }
-
-  (function () {
-    const card = document.getElementById('sim-card');
-    if (!card) return;
-
-    const dropzone = document.getElementById('sim-dropzone');
-    const dropzoneLabel = document.getElementById('sim-dropzone-label');
-    const publishBtn = document.getElementById('sim-publish-btn');
-    const phoneIdle = document.getElementById('sim-phone-idle');
-    const phoneNotification = document.getElementById('sim-phone-notification');
-    const successMsg = document.getElementById('sim-success');
-    const resetBtn = document.getElementById('sim-reset');
-    const instruction = document.getElementById('sim-instruction');
-
-    const ACCENT = '#C2410C';
-    const ACCENT2 = '#2FAE68';
-
-    let dragging = false;
-    let moved = false;
-    let startX = 0;
-    let startY = 0;
-    let published = false;
-
-    function isOverDropzone(x, y) {
-      const rect = dropzone.getBoundingClientRect();
-      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-    }
-
-    function highlightDropzone(active) {
-      dropzone.style.borderColor = active ? ACCENT2 : '';
-      dropzone.style.backgroundColor = active ? 'rgba(47,174,104,0.06)' : '';
-      dropzoneLabel.textContent = active ? 'Engedje el' : 'Ide húzza a hírkártyát';
-    }
-
-    function snapBack() {
-      card.style.transition = 'transform 0.3s ease';
-      card.style.transform = '';
-      setTimeout(() => { card.style.transition = ''; }, 300);
-    }
-
-    function publish() {
-      if (published) return;
-      published = true;
-
-      card.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-      card.style.transform = 'scale(0.85)';
-      card.style.opacity = '0';
-      card.setAttribute('aria-hidden', 'true');
-      card.tabIndex = -1;
-
-      highlightDropzone(false);
-      dropzone.style.borderColor = ACCENT;
-      dropzone.style.borderStyle = 'solid';
-      dropzone.style.backgroundColor = 'rgba(194,65,12,0.06)';
-      dropzoneLabel.textContent = 'Feltöltve';
-
-      publishBtn.style.opacity = '1';
-      publishBtn.style.backgroundColor = ACCENT;
-
-      setTimeout(() => {
-        publishBtn.textContent = 'Közzétéve ✓';
-        successMsg.classList.remove('hidden');
-
-        phoneIdle.classList.add('hidden');
-        phoneNotification.classList.remove('hidden');
-        phoneNotification.style.opacity = '0';
-        phoneNotification.style.transform = 'translateY(-8px)';
-        phoneNotification.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
-        requestAnimationFrame(() => {
-          phoneNotification.style.opacity = '1';
-          phoneNotification.style.transform = 'translateY(0)';
-        });
-
-        instruction.textContent = 'Kész! Így landol egy közlemény a lakosok telefonján, néhány másodperc alatt.';
-      }, 350);
-    }
-
-    function reset() {
-      published = false;
-      dragging = false;
-
-      card.style.transition = '';
-      card.style.transform = '';
-      card.style.opacity = '1';
-      card.style.zIndex = '';
-      card.style.boxShadow = '';
-      card.removeAttribute('aria-hidden');
-      card.tabIndex = 0;
-
-      dropzone.style.borderColor = '';
-      dropzone.style.backgroundColor = '';
-      dropzoneLabel.textContent = 'Ide húzza a hírkártyát';
-
-      publishBtn.textContent = 'Közzététel';
-      publishBtn.style.opacity = '';
-      publishBtn.style.backgroundColor = '';
-
-      successMsg.classList.add('hidden');
-      phoneNotification.classList.add('hidden');
-      phoneNotification.style.transition = '';
-      phoneIdle.classList.remove('hidden');
-
-      instruction.textContent = 'Fogja meg a hírkártyát, és húzza (vagy egyszerűen koppintson rá) a Közzététel mezőbe.';
-    }
-
-    card.addEventListener('pointerdown', (e) => {
-      if (published) return;
-      dragging = true;
-      moved = false;
-      startX = e.clientX;
-      startY = e.clientY;
-      card.setPointerCapture(e.pointerId);
-      card.style.transition = '';
-      card.style.zIndex = '20';
-      card.style.boxShadow = '0 14px 28px -10px rgba(27,77,58,0.35)';
-      card.style.transform = 'scale(1.04)';
-    });
-
-    card.addEventListener('pointermove', (e) => {
-      if (!dragging || published) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
-      card.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 40}deg) scale(1.04)`;
-      highlightDropzone(isOverDropzone(e.clientX, e.clientY));
-    });
-
-    function endDrag(e) {
-      if (!dragging || published) return;
-      dragging = false;
-      card.style.boxShadow = '';
-      card.style.zIndex = '';
-
-      if (!moved || isOverDropzone(e.clientX, e.clientY)) {
-        publish();
-      } else {
-        snapBack();
-        highlightDropzone(false);
-      }
-    }
-
-    card.addEventListener('pointerup', endDrag);
-    card.addEventListener('pointercancel', () => {
-      if (!dragging) return;
-      dragging = false;
-      card.style.boxShadow = '';
-      card.style.zIndex = '';
-      snapBack();
-      highlightDropzone(false);
-    });
-
-    card.addEventListener('keydown', (e) => {
-      if ((e.key === 'Enter' || e.key === ' ') && !published) {
-        e.preventDefault();
-        publish();
-      }
-    });
-
-    resetBtn.addEventListener('click', reset);
-  })();
 </script>
 </body>
 </html>
