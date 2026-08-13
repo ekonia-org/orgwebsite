@@ -279,19 +279,19 @@
       </div>
     </div>
 
-    <form class="lg:col-span-8 space-y-8">
+    <form id="contact-form" class="lg:col-span-8 space-y-8">
       <div>
         <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="name">Teljes név</label>
-        <input id="name" type="text" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+        <input id="name" name="name" type="text" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
       </div>
       <div class="grid sm:grid-cols-2 gap-8">
         <div>
           <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="town">Település neve</label>
-          <input id="town" type="text" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+          <input id="town" name="town" type="text" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
         </div>
         <div>
           <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="role">Beosztás</label>
-          <select id="role" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+          <select id="role" name="role" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
             <option value="">Válasszon…</option>
             <option>Polgármester</option>
             <option>Jegyző</option>
@@ -303,19 +303,20 @@
       <div class="grid sm:grid-cols-2 gap-8">
         <div>
           <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="email">E-mail cím</label>
-          <input id="email" type="email" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+          <input id="email" name="email" type="email" required class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
         </div>
         <div>
           <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="phone">Telefonszám</label>
-          <input id="phone" type="tel" class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
+          <input id="phone" name="phone" type="tel" class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink">
         </div>
       </div>
       <div>
         <label class="block font-mono text-[11px] uppercase tracking-widest text-ink/40 mb-2" for="message">Üzenet</label>
-        <textarea id="message" rows="3" placeholder="Meséljen röviden a település jelenlegi kommunikációs kihívásairól…" class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink resize-none"></textarea>
+        <textarea id="message" name="message" rows="3" placeholder="Meséljen röviden a település jelenlegi kommunikációs kihívásairól…" class="w-full border-b border-ink/25 bg-transparent py-2.5 text-sm focus-ring focus:border-ink resize-none"></textarea>
       </div>
-      <div class="pt-2">
-        <button type="submit" class="bg-ink text-paper px-8 py-3.5 font-medium hover:bg-accent transition-colors focus-ring">Küldés</button>
+      <div class="pt-2 flex items-center gap-5">
+        <button id="contact-submit" type="submit" class="bg-ink text-paper px-8 py-3.5 font-medium hover:bg-accent transition-colors focus-ring disabled:opacity-50">Küldés</button>
+        <p id="contact-status" class="text-sm" role="status" aria-live="polite"></p>
       </div>
     </form>
   </div>
@@ -371,6 +372,40 @@
   } else {
     revealEls.forEach(el => el.classList.add('is-visible'));
   }
+
+  const contactForm = document.getElementById('contact-form');
+  const contactSubmit = document.getElementById('contact-submit');
+  const contactStatus = document.getElementById('contact-status');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    contactSubmit.disabled = true;
+    contactStatus.textContent = 'Küldés…';
+    contactStatus.className = 'text-sm text-ink/50';
+
+    const data = Object.fromEntries(new FormData(contactForm).entries());
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json().catch(() => ({}));
+
+      if (!res.ok) throw new Error(result.error || 'Ismeretlen hiba történt.');
+
+      contactStatus.textContent = 'Köszönjük! Hamarosan jelentkezünk.';
+      contactStatus.className = 'text-sm text-accent2';
+      contactForm.reset();
+    } catch (err) {
+      contactStatus.textContent = err.message || 'Nem sikerült elküldeni az üzenetet. Próbálja meg később.';
+      contactStatus.className = 'text-sm text-accent';
+    } finally {
+      contactSubmit.disabled = false;
+    }
+  });
 </script>
 </body>
 </html>
